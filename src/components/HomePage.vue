@@ -3,7 +3,7 @@
  * @Description: 
  * @Author: MArio
  * @Date: 2021-11-18 08:18:54
- * @LastEditTime: 2021-11-19 14:35:45
+ * @LastEditTime: 2021-11-20 20:12:52
  * @LastEditors: MArio
 -->
 <template>
@@ -1427,7 +1427,7 @@
           </td>
           <td>
             <div class="fandramCTable">
-              <div class="fandramCTableCorld">尽情期待</div>
+              <div class="fandramCTableCorld">资源类型</div>
               <div
                 v-show="disp == 1 || der == true"
                 @click="changeDisp(2)"
@@ -1543,9 +1543,9 @@
     </div>
     <div class="dailyNewDropdownColumn2 Neworldscro">
       <table>
-        <tr v-for="item in dataCard" :key="item.id">
-          <td v-for="item2 in item" :key="item2.id">
-            <div class="dailyNewColumnCard">
+        <tr class="trH" v-for="item in dataCard" :key="item.id">
+          <td class="tdH" v-for="item2 in item" :key="item2.id">
+            <div class="dailyNewColumnCard" @click="setclick(item2.href)">
               <div class="dailyNewColumnCardLeft">
                 <img class="dailyNewColumnCardLeftImg" :src="item2.src" />
               </div>
@@ -1569,10 +1569,29 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import axios from "axios";
 var cheerio = require("cheerio");
 export default {
   name: "homePage",
+  computed: {
+    url: {
+      get() {
+        return this.$store.getters.getUrl;
+      },
+      set(val) {
+        this.SET_URL(val);
+      },
+    },
+    view: {
+      get() {
+        return this.$store.getters.getView;
+      },
+      set(val) {
+        this.SET_VIEW(val);
+      },
+    },
+  },
   data() {
     return {
       dataCard: [[]],
@@ -1695,6 +1714,7 @@ export default {
       });
   },
   methods: {
+    ...mapMutations(["SET_URL", "SET_VIEW"]),
     doInit() {
       axios
         .get(this.indexUrl, { timeout: 120000 })
@@ -1755,6 +1775,10 @@ export default {
     changeDisp(e) {
       this.disp = e;
     },
+    setclick(val) {
+      this.view = 'No2On';
+      this.url = val;
+    },
     changeView(e, v) {
       switch (e) {
         case "fanKo1On1":
@@ -1772,6 +1796,12 @@ export default {
 </script>
 
 <style scoped>
+.tdH {
+  width: 25%;
+}
+.trH {
+  width: 100%;
+}
 .dailyNewShuaXinText {
   float: left;
 }

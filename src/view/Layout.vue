@@ -3,7 +3,7 @@
  * @Description: 
  * @Author: MArio
  * @Date: 2021-11-17 17:18:26
- * @LastEditTime: 2021-11-18 16:50:10
+ * @LastEditTime: 2021-11-20 19:48:13
  * @LastEditors: MArio
 -->
 <template>
@@ -12,10 +12,10 @@
     <div class="layoutPan">
       <!-- 组件 -->
       <transition name="slide-fade">
-        <HomePage v-show="true" />
+        <HomePage v-show="view === 'No1On'" />
       </transition>
       <transition name="slide-fade">
-        <GoffyReader v-show="false" />
+        <GoffyReader v-show="view === 'No2On'"/>
       </transition>
     </div>
   </div>
@@ -24,10 +24,15 @@
 <script>
 import TitleBlock from "../components/TitleBlock";
 import HomePage from "../components/HomePage";
-import GoffyReader from "../components/GoffyReader.vue"
+import GoffyReader from "../components/GoffyReader.vue";
 export default {
   name: "layout",
   components: { TitleBlock, HomePage, GoffyReader },
+  computed: {
+    view() {
+      return this.$store.getters.getView;
+    },
+  },
 };
 </script>
 
