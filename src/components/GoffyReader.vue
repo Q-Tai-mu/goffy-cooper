@@ -128,11 +128,7 @@ export default {
         .get(newValue)
         .then((resp) => {
           var $ = cheerio.load(resp.data);
-          // console.log($("div.book-name").text());
           this.bookTitle = $("div.book-name").text();
-
-          // console.log("全部目录"+$($($("div.btn-group")).children("div.fr")).children("a.all-catalog").attr('href'));
-          // console.log($($($("div.btn-group")).children("a.btn")).attr("href"));
           this.defaultReading = $($($("div.btn-group")).children("a.btn")).attr(
             "href"
           );
