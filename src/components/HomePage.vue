@@ -3,7 +3,7 @@
  * @Description: 
  * @Author: MArio
  * @Date: 2021-11-18 08:18:54
- * @LastEditTime: 2021-11-20 20:12:52
+ * @LastEditTime: 2021-11-22 16:01:01
  * @LastEditors: MArio
 -->
 <template>
@@ -1541,7 +1541,11 @@
         </tr>
       </table>
     </div>
-    <div class="dailyNewDropdownColumn2 Neworldscro">
+    <div
+      ref="boxjuHome"
+      class="dailyNewDropdownColumn2 Neworldscro"
+      @scroll="handleScroll($event)"
+    >
       <table>
         <tr class="trH" v-for="item in dataCard" :key="item.id">
           <td class="tdH" v-for="item2 in item" :key="item2.id">
@@ -1591,12 +1595,26 @@ export default {
         this.SET_VIEW(val);
       },
     },
+    hurl: {
+      get() {
+        return this.$store.getters.getHurl;
+      },
+      set(val) {
+        this.SET_HURL(val);
+      },
+    },
   },
   data() {
     return {
+      pageNumber: 1,
+      PageIndex: [],
+      paged: 0,
       dataCard: [[]],
       indexPage: 0,
       indexUrl: "",
+      indexSearch: "",
+      indexPat: "",
+      searchValue: "",
       disp: 1,
       der: true,
       dropRs: {
@@ -1707,14 +1725,77 @@ export default {
       .then((resp) => {
         this.indexPage = resp.data.indexPage;
         this.indexUrl = resp.data.indexUrl;
+        this.indexSearch = resp.data.indexSearch;
+        this.indexPat = resp.data.indexPat;
         this.doInit();
       })
       .catch((err) => {
         console.log(err);
       });
   },
+  watch: {
+    hurl: function (newValue, oldValue) {
+      console.log(oldValue);
+      console.log(newValue);
+      if (newValue) {
+        this.searchValue = newValue;
+        axios
+          .get(this.indexSearch + newValue, { timeout: 120000 })
+          .then((resp) => {
+            var $ = cheerio.load(resp.data);
+            var arr1 = [];
+            this.paged = parseInt(
+              $($("div.search-tab div.search_d_pagesize"))
+                .children("#totalPage")
+                .text()
+            );
+            console.log(this.paged);
+            $("div.search-tab div.search-result-list").each(function (i, e) {
+              var pro = {
+                href: $($(e).children("div.imgbox")).children("a").attr("href"),
+                src: $($($(e).children("div.imgbox")).children("a"))
+                  .children("img")
+                  .attr("src"),
+                alt: $($($(e).children("div.fl")).children("h2.tit")).text(),
+                text1: $($(e).children("div.fl")).children("p").text(),
+                text2: $($(e).children("div.fl"))
+                  .children("div.key-word")
+                  .text(),
+              };
+              arr1.push(pro);
+            });
+
+            //把 arr 的一维数组先转成二维的，然后再在 vue 里面渲染
+            this.dataCard = arr1.reduce(
+              (pre, next, idx) => {
+                // reduce 用来便利数组，具体语法就 rtfm 吧
+                const inner = pre[~~(idx / 4)]; // ~~用来取整，inner 是内层数组
+                if (inner !== undefined) {
+                  // 判断有没有内层数组
+                  inner.push(next); // 如果有就把遍历的值 next push 到内层数组里
+                } else {
+                  pre.push([next]); // 没有就新建一个包含 next 的数组，作为内层数组
+                }
+                return pre;
+              },
+              [[]]
+            );
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
+    paged(newValue, oldValue) {
+      console.log(oldValue);
+      console.log(newValue);
+      for (var i = 1; i < newValue; i++) {
+        this.PageIndex.push(i);
+      }
+    },
+  },
   methods: {
-    ...mapMutations(["SET_URL", "SET_VIEW"]),
+    ...mapMutations(["SET_URL", "SET_VIEW", "SET_HURL"]),
     doInit() {
       axios
         .get(this.indexUrl, { timeout: 120000 })
@@ -1776,7 +1857,7 @@ export default {
       this.disp = e;
     },
     setclick(val) {
-      this.view = 'No2On';
+      this.view = "No2On";
       this.url = val;
     },
     changeView(e, v) {
@@ -1789,6 +1870,78 @@ export default {
           this.option.option1.target = this.option.option1.dropdown[v].name;
           this.dropRs.dropR.name = e;
           break;
+      }
+    },
+    handleScroll(e) {
+      var _this = this;
+      if (
+        parseInt(e.srcElement.scrollTop) +
+          parseInt(e.srcElement.offsetHeight) >=
+        parseInt(e.srcElement.scrollHeight.toString()) - 1
+      ) {
+        if (_this.PageIndex[_this.pageNumber] != null) {
+          _this.pageNumber = _this.PageIndex[_this.pageNumber];
+
+          _this.$refs.boxjuHome.scrollTop = e.srcElement.scrollTop - 200;
+
+          var hurl =
+            this.indexSearch +
+            this.searchValue +
+            this.indexPat +
+            _this.pageNumber;
+
+          axios
+            .get(hurl, { timeout: 120000 })
+            .then((resp) => {
+              var $ = cheerio.load(resp.data);
+              var arr1 = [];
+              this.paged = parseInt(
+                $($("div.search-tab div.search_d_pagesize"))
+                  .children("#totalPage")
+                  .text()
+              );
+              console.log(this.paged);
+              $("div.search-tab div.search-result-list").each(function (i, e) {
+                var pro = {
+                  href: $($(e).children("div.imgbox"))
+                    .children("a")
+                    .attr("href"),
+                  src: $($($(e).children("div.imgbox")).children("a"))
+                    .children("img")
+                    .attr("src"),
+                  alt: $($($(e).children("div.fl")).children("h2.tit")).text(),
+                  text1: $($(e).children("div.fl")).children("p").text(),
+                  text2: $($(e).children("div.fl"))
+                    .children("div.key-word")
+                    .text(),
+                };
+                arr1.push(pro);
+              });
+
+              //把 arr 的一维数组先转成二维的，然后再在 vue 里面渲染
+              var dataCard = arr1.reduce(
+                (pre, next, idx) => {
+                  // reduce 用来便利数组，具体语法就 rtfm 吧
+                  const inner = pre[~~(idx / 4)]; // ~~用来取整，inner 是内层数组
+                  if (inner !== undefined) {
+                    // 判断有没有内层数组
+                    inner.push(next); // 如果有就把遍历的值 next push 到内层数组里
+                  } else {
+                    pre.push([next]); // 没有就新建一个包含 next 的数组，作为内层数组
+                  }
+                  return pre;
+                },
+                [[]]
+              );
+
+              for (var j = 0; j < dataCard.length; j++) {
+                this.dataCard.push(dataCard[j]);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
       }
     },
   },

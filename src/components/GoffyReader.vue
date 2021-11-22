@@ -329,7 +329,7 @@ export default {
   color: #32259b;
 }
 .goffyAisdeCard {
-  width: 100%;
+  /* width: 100%; */
   height: 38px;
   padding: 7px;
   padding-bottom: 3px;
