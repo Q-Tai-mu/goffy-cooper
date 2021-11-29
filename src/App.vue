@@ -3,7 +3,7 @@
  * @Description: 
  * @Author: MArio
  * @Date: 2021-11-17 13:16:24
- * @LastEditTime: 2021-11-18 15:19:15
+ * @LastEditTime: 2021-11-24 12:53:36
  * @LastEditors: MArio
 -->
 <template>
@@ -43,6 +43,8 @@ export default {
     margin:0px;
     width: 100%;
     height: 100%;
+     border-block-color: #fff;
+      box-shadow: 0 16px 32px 0 rgba(48, 55, 66, 0.15);
     /* height:-webkit-fill-available; */
     /* min-width: 1334px;
     min-height: 830px; */

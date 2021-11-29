@@ -223,7 +223,7 @@ export default {
 }
 .content {
   padding: 30px 0 50px;
-  height: 66%;
+  height: 73%;
 }
 .reader_line {
   border-top: 1px dotted #ccc;
@@ -268,7 +268,7 @@ export default {
 }
 .reader_box {
   width: 760px;
-  padding: 0 100px;
+  padding: 0 20px;
   position: relative;
   margin: 0 auto;
   /* border-bottom: 1px solid #ccc; */
@@ -285,7 +285,7 @@ export default {
   padding-top: 3.5%;
   cursor: pointer;
   overflow: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   text-overflow: ellipsis;
 }
 .goffyAisdeChapterpoint {
@@ -295,7 +295,7 @@ export default {
 .goffyAisdeCardInfoN {
   background-color: #f1f1f1;
   border-radius: 3px;
-  width: 94%;
+  width: 100%;
   height: 100%;
   -webkit-transition: all 250ms cubic-bezier(0.02, 0.01, 0.47, 1);
   transition: all 250ms cubic-bezier(0.02, 0.01, 0.47, 1);
@@ -312,7 +312,7 @@ export default {
 .goffyAisdeCardInfo {
   background-color: #5d568c;
   border-radius: 3px;
-  width: 94%;
+  width: 100%;
   height: 100%;
   -webkit-transition: all 250ms cubic-bezier(0.02, 0.01, 0.47, 1);
   transition: all 250ms cubic-bezier(0.02, 0.01, 0.47, 1);
@@ -330,7 +330,7 @@ export default {
 }
 .goffyAisdeCard {
   /* width: 100%; */
-  height: 38px;
+  height: 45px;
   padding: 7px;
   padding-bottom: 3px;
   padding-top: 2px;
@@ -347,7 +347,7 @@ export default {
   padding-top: 15px;
   font-weight: bold;
   font-family: unset;
-  height: 35px;
+  height: 55px;
 }
 .goffyBody {
   position: relative;

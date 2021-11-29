@@ -1,6 +1,14 @@
+/*
+ * @公司名: 北京雨花石云计算
+ * @Description: 
+ * @Author: MArio
+ * @Date: 2021-11-17 13:19:13
+ * @LastEditTime: 2021-11-23 07:54:14
+ * @LastEditors: MArio
+ */
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -17,6 +25,8 @@ async function createWindow() {
     height: 830,
     minHeight: 830,
     minWidth: 1334,
+    maxHeight: 830,
+    maxWidth: 1334,
     frame: false,
     resizable: true,
     transparent: true,
@@ -40,6 +50,16 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
+  ipcMain.on('minWindow', () => {
+    win.minimize();
+  })
+  ipcMain.on('maxWindow', () => {
+    win.isMaximized() ? win.unmaximize() : win.maximize()
+  })
+  ipcMain.on('closeWindow', () => {
+    win.destroy();
+  })
 }
 
 // Quit when all windows are closed.

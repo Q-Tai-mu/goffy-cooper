@@ -58,7 +58,7 @@
       />
     </div>
     <div class="Ternarylinkage">
-      <div class="BinarylinkageGan">
+      <div class="BinarylinkageGan" @click="closeWindow()">
         <svg
           t="1636216490127"
           class="icon"
@@ -77,7 +77,7 @@
         </svg>
       </div>
 
-      <div class="Binarylinkage">
+      <div class="Binarylinkage" @click="maxWindow()">
         <svg
           t="1636216526439"
           class="icon"
@@ -94,7 +94,7 @@
           ></path>
         </svg>
       </div>
-      <div class="Binarylinkage">
+      <div class="Binarylinkage" @click="minWindow()">
         <svg
           t="1636216576681"
           class="icon"
@@ -117,6 +117,7 @@
 </template>
 
 <script>
+const { ipcRenderer } = require("electron");
 import { mapMutations } from "vuex";
 export default {
   name: "titleBlock",
@@ -140,6 +141,17 @@ export default {
     search() {
       this.hurl = this.searchValue;
     },
+    minWindow() {
+      // ipcRenderer.send("minWindow");
+      ipcRenderer.send("minWindow");
+    },
+    maxWindow() {
+    //   ipcRenderer.send("maxWindow");
+     this.$Message.info('目前应用布局，暂不支持最大化')
+    },
+    closeWindow() {
+      ipcRenderer.send("closeWindow");
+    },
   },
 };
 </script>
@@ -149,7 +161,7 @@ export default {
   outline-style: none;
   border: none;
   border-radius: 3px;
-  padding: 9px 14px;
+  padding: 8px 14px;
   width: 320px;
   font-size: 14px;
   font-weight: 700;
@@ -203,8 +215,8 @@ export default {
 }
 
 .BinarylinkageGan {
-  width: 18%;
-  height: 20px;
+  width: 25%;
+  height: 30px;
   /* background-color: aqua; */
   /* padding-top: 10%; */
   float: right;
@@ -222,8 +234,8 @@ export default {
 }
 
 .Binarylinkage {
-  width: 18%;
-  height: 20px;
+  width: 25%;
+  height: 30px;
   /* background-color: aqua; */
   /* padding-top: 10%; */
   float: right;
